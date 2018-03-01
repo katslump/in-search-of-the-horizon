@@ -30,10 +30,20 @@ A login screen that requests the users email and password
 - Signup
 A signup screen that requests the users first name, last name, email, password, photo, cohort, and short bio
 - Main
-A screen that shows the user other horizonites in their area
+A screen that shows the user other horizonites in their area in list format
+- Profile
+A popup that shows the users photo, first name, last name, phone, email, cohort, and short bio
 - Settings
     - Notifications
     - Name
     - Email
     - Password
     - Mobile Number
+
+## Technologies
+- Express
+- React
+- React Native
+- React Navigation
+- Hypertrack API - hypertrack.com
+- MongoDB
