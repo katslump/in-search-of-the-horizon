@@ -15,7 +15,6 @@ import {
 import {StackNavigator} from 'react-navigation';
 import {Location, Permissions} from 'expo';
 import LoginScreen from './components/LoginScreen';
-import SignupScreen from './components/SignupScreen';
 
 
 //Navigator
