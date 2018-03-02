@@ -8,10 +8,10 @@ import bodyParser from 'body-parser';
 
 // Import models
 import User from './models/User.js'
-import Location from './models/Location.js'
+// import Location from './models/Location.js'
 
 // Set port
-var port = parseInt(process.env.PORT) || 3000;
+var port = parseInt(process.env.PORT) || 3030;
 
 if (! fs.existsSync('./env.sh')) {
   throw new Error('env.sh file is missing');
