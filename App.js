@@ -17,6 +17,7 @@ import {Location, Permissions} from 'expo';
 import LoginScreen from './components/LoginScreen';
 import SignupScreen from './components/SignupScreen';
 
+
 //Navigator
 export default StackNavigator({
   Login: {
