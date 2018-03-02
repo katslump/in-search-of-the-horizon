@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import mongoose from 'mongoose';
-import morgan from 'morgan';
 import routes from './routes/index';
 import bodyParser from 'body-parser';
 
@@ -13,7 +12,6 @@ import Location from './models/Location.js'
 
 // Set port
 var port = parseInt(process.env.PORT) || 3000;
-
 
 if (! fs.existsSync('./env.sh')) {
   throw new Error('env.sh file is missing');
@@ -46,13 +44,27 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-// Logger that outputs all requests into the console
-app.use(morgan('combined'));
+// Configure database endpoint pathes
+// app.use('/', routes);
 
-// Handle / route
-app.get('/', (req, res) =>
-  res.send('Hello World!')
-)
+app.get('/', (req, res) => {
+    console.log("got inside");
+  res.json({ message: "Hoirozns!" })
+  }
+);
+
+// Enables the end user to grab all todo items in the database
+// app.get('/users', (req, res) => {
+//     console.log("made it to users");
+//     res.send("made it to users");
+//   User.find().catch(error => {
+//         console.log(error);
+//     res.send(error);
+//   }).then(response => {
+//       console.log(response);
+//     res.send({users: response});
+//   })
+// });
 
 // Launch the server on port 3000
 const server = app.listen(port, () => {

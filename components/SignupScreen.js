@@ -14,8 +14,6 @@ import {
 } from 'react-native';
 import {styles} from '../App';
 
-import {Location, Permissions} from 'expo';
-
 class SignupScreen extends React.Component {
   constructor() {
     super();

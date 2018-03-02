@@ -13,9 +13,9 @@ import {
   Keyboard
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import {Location, Permissions} from 'expo';
 import LoginScreen from './components/LoginScreen';
 import SignupScreen from './components/SignupScreen';
+import UsersScreen from './components/UsersScreen';
 
 
 //Navigator
@@ -25,8 +25,11 @@ export default StackNavigator({
   },
   Signup: {
     screen: SignupScreen
-  }
-}, {initialRouteName: 'Login'});
+},
+Users: {
+  screen: UsersScreen
+}
+}, {initialRouteName: 'Users'});
 
 export const styles = StyleSheet.create({
     container: {
