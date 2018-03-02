@@ -45,7 +45,6 @@ class UsersScreen extends React.Component {
     .then(function(responseJson) {
         console.log("/");
         console.log(responseJson);
-    //   self.setState({dataSource: response});
     })
     .catch(function(error) {
     //   self.setState({message: error});
