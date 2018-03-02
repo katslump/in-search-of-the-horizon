@@ -30,9 +30,15 @@ class LoginScreen extends React.Component {
     title: 'Login'
   };
 
+  componentWillMount() {
+      axios.get('/users').then(function(response) {
+          console.log(response);
+        }).catch(function(error) {
+          console.log(error);
+        });
+  }
+
   componentDidMount() {
-
-
     AsyncStorage.getItem('user').then(result => {
       var parsedResult = JSON.parse(result);
       var username = parsedResult.username;
