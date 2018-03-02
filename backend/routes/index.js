@@ -39,6 +39,4 @@ app.post('/register', (req, res) => {
 //   })
 // });
 
-
-
 module.exports = app;

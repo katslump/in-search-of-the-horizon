@@ -10,6 +10,7 @@ import {
   Alert,
   Button,
   AsyncStorage,
+  Image,
   Keyboard
 } from 'react-native';
 import {styles} from '../App';
@@ -36,28 +37,15 @@ class UsersScreen extends React.Component {
   }
 
   componentDidMount() {
-      console.log("MOUNTINGS");
-    // GET /users via axios
-    let self = this;
-
-    fetch('http://Kats-MacBook-Pro.local:3000/')
+      let self = this;
+    fetch('http://Kats-MacBook-Pro.local:3000/users')
     .then((response) => response.json())
     .then(function(responseJson) {
-        console.log("/");
-        console.log(responseJson);
+        self.setState({dataSource: responseJson.users});
     })
     .catch(function(error) {
-    //   self.setState({message: error});
-        console.log(error);
+      self.setState({message: error});
     });
-
-    // axios.get('/users').then(function(response) {
-    //     console.log(response);
-    // //   self.setState({dataSource: response});
-    // }).catch(function(error) {
-    // //   self.setState({message: error});
-    // console.log(error);
-    // });
 
   }
 
@@ -70,6 +58,11 @@ class UsersScreen extends React.Component {
       <Text>{this.state.message}</Text>
       <ListView style={styles.listContainer} dataSource={dataSource.cloneWithRows(this.state.dataSource)} renderRow={(rowData) =>
           <View style={styles.listRow}>
+              <Image source={{uri: rowData.photo}}
+       style={{width: 100, height: 100}} />
+              <Text>{rowData.f_name} {rowData.l_name}</Text>
+              <Text>{rowData.phone}</Text>
+              <Text>{JSON.stringify(rowData.cohort)}</Text>
           </View>}/>
     </View>)
   };

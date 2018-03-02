@@ -54,17 +54,13 @@ app.get('/', (req, res) => {
 );
 
 // Enables the end user to grab all todo items in the database
-// app.get('/users', (req, res) => {
-//     console.log("made it to users");
-//     res.send("made it to users");
-//   User.find().catch(error => {
-//         console.log(error);
-//     res.send(error);
-//   }).then(response => {
-//       console.log(response);
-//     res.send({users: response});
-//   })
-// });
+app.get('/users', (req, res) => {
+  User.find().catch(error => {
+      res.json({ error: error})
+  }).then(response => {
+    res.json({users: response});
+  })
+});
 
 // Launch the server on port 3000
 const server = app.listen(port, () => {
