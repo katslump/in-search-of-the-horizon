@@ -12,14 +12,4 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Import TodoItem model
 var User = require('../models/User.js');
 
-// Enables the end user to grab all todo items in the database
-// app.get('/login', (req, res) => {
-//   User.find().catch(error => {
-//     res.send(error);
-//   }).then(response => {
-//       console.log(response);
-//     res.send({users: response});
-//   })
-// });
-
 module.exports = app;
