@@ -1,5 +1,4 @@
 import mongoose, {Schema} from 'mongoose';
-import Location from './Location';
 
 // Define movie schema
 var userSchema = new Schema({
@@ -7,16 +6,16 @@ var userSchema = new Schema({
     radius: Number,
     bio: String,
     photo: String,
+    location_name: String,
     f_name: String,
     l_name: String,
     email: {
         type: String,
         unique: true
     },
-    locations: [{
-        type: Schema.Types.ObjectId,
-        ref: Location
-    }],
+    lat: Number,
+    long: Number,
+    updated_last: Date,
     group: Array,
     cohort: {
         year: String,

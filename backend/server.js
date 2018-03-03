@@ -7,8 +7,7 @@ import routes from './routes/index';
 import bodyParser from 'body-parser';
 
 // Import models
-import User from './models/User.js'
-// import Location from './models/Location.js'
+import User from './models/User.js';
 
 // Set port
 var port = parseInt(process.env.PORT) || 3000;
@@ -47,9 +46,10 @@ app.use(bodyParser.json());
 // Configure database endpoint pathes
 // app.use('/', routes);
 
+
+
 app.get('/', (req, res) => {
-    console.log("got inside");
-  res.json({ message: "Hoirozns!" })
+  res.json({ message: "Welcome to the home page!" })
   }
 );
 
@@ -90,7 +90,23 @@ app.post('/register', (req, res) => {
     console.log('maybe')
     // console.log(error)
     res.send(error);
-  })
+  });
+});
+
+  // Enables the end user to grab all todo items in the database
+  app.post('/location', (req, res) => {
+
+      User.findByIdAndUpdate(req.body.user_id, {$set: {
+          lat: new Number(req.body.lat),
+          long: new Number(req.body.long),
+          updated_last: new Date(req.body.last_updated),
+          location_name: new String(req.body.location_name)
+      }}).then(response => {
+          res.send(response);
+        })
+      .catch(error => {
+          res.send(error);
+      });
 });
 
 
