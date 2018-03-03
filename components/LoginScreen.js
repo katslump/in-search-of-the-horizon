@@ -41,7 +41,7 @@ class LoginScreen extends React.Component {
     login(email, password) {
         let self = this;
         // console.log(this.state.email, this.state.password)
-        fetch(`http://10.2.110.153:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
+        fetch(`http://10.2.105.66:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"

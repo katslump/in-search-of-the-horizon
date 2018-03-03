@@ -29,7 +29,7 @@ class SignupScreen extends React.Component {
     title: 'Register'
   };
   register() {
-    fetch('http://10.2.110.153:3000/register', {
+    fetch('http://10.2.105.66:3000/register', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
@@ -49,7 +49,6 @@ class SignupScreen extends React.Component {
       console.log("probably", err)
       this.setState({message: err});
     });
-    // console.log(this.state.f_name, this.state.l_name, this.state.email, this.state.password)
   }
   render() {
     return (<View style={styles.container}>
