@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import {styles} from '../App';
 
+export const myShit = {}
+
 class LoginScreen extends React.Component {
     constructor() {
         super();
@@ -47,6 +49,8 @@ class LoginScreen extends React.Component {
         }).then((response) => response.json()).then((responseJson) => {
             if (responseJson) {
                 AsyncStorage.setItem('email', JSON.stringify({email: self.state.email, password: self.state.password}));
+                // console.log(self.state.email)
+                myShit.currentUser = self.state.email;
                 this.props.navigation.navigate('Users');
             } else {
                 this.setState({message: responseJson.error});

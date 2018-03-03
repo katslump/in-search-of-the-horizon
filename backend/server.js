@@ -53,14 +53,40 @@ app.get('/', (req, res) => {
   }
 );
 
+function radius(currentUser, allUsers) {
+
+  let group = allUsers.filter(user => {
+    let objlat = parseFloat(user.lat);
+    let objlong = parseFloat(user.long);
+    return currentUser.email !== user.email && currentUser.lat > objlat - .4 && currentUser.lat < objlat + .4 && currentUser.long > objlong - .4 && currentUser.long < objlong + .4;
+  })
+  User.findOneAndUpdate({email:currentUser.email},{$set:{group: group} }, function(error, pos) {
+    if(error) {
+      console.log('SOMETHING BAD HAPPENED')
+    }
+  })
+  return group;
+}
+
+
 // Enables the end user to grab all todo items in the database
 app.get('/users', (req, res) => {
+  let user = req.query.currentUser
+  console.log(user);
   User.find().catch(error => {
-      res.json({ error: error})
+      res.json({ error: error});
   }).then(response => {
-    res.json({users: response});
+    // console.log(response)
+    User.findOne({email:user})
+    .then((result) =>{
+      // console.log(result)
+      // console.log(result.lat)
+      let group = radius(result, response)
+      res.json({users:group})
+    })//.catch(error => res.json({ error: error}))
   })
 });
+
 
 app.get('/login', (req,res) => {
   console.log(req.query.email, req.query.password)
@@ -93,10 +119,12 @@ app.post('/register', (req, res) => {
   });
 });
 
+
+
   // Enables the end user to grab all todo items in the database
   app.post('/location', (req, res) => {
 
-      User.findByIdAndUpdate(req.body.user_id, {$set: {
+      User.findOneAndUpdate({email: req.body.user_id}, {$set: {
           lat: new Number(req.body.lat),
           long: new Number(req.body.long),
           updated_last: new Date(req.body.last_updated),

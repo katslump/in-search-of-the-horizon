@@ -17,7 +17,7 @@ import {Location, Permissions} from 'expo';
 import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
-
+import {myShit} from './LoginScreen'
 
 class UsersScreen extends React.Component {
     constructor(props) {
@@ -32,8 +32,9 @@ class UsersScreen extends React.Component {
             currentLocation: ''
         };
     }
-
+    
     getLocation = async () => {
+
         let self = this;
         let currLocation = {};
         let {status} = await Permissions.askAsync(Permissions.LOCATION);
@@ -51,11 +52,11 @@ class UsersScreen extends React.Component {
                       lat: location.coords.latitude,
                       long: location.coords.longitude,
                       last_updated: new Date(),
-                      user_id: "5a9999e3f379104f91ec5002",
+                      user_id: myShit,
                       location_name: json.results[0].address_components[2].long_name
                   };
                   this.setState({currentLocation: json.results[0].address_components[2].long_name});
-                  fetch('http://Kats-MacBook-Pro.local:3000/location', {
+                  fetch('http://10.2.110.153:3000/location', {
                       method: 'POST',
                       headers: {
                           "Content-Type": "application/json"
@@ -91,12 +92,10 @@ class UsersScreen extends React.Component {
 
     componentDidMount() {
         let self = this;
-        fetch('http://Kats-MacBook-Pro.local:3000/users').then((response) => response.json()).then(function(responseJson) {
-            console.log(responseJson);
+        fetch(`http://10.2.110.153:3000/users?currentUser=${myShit.currentUser}`).then((response) => response.json()).then(function(responseJson) {
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
             console.log(error);
-
             self.setState({message: error});
         });
     }
@@ -113,6 +112,7 @@ class UsersScreen extends React.Component {
                 <Text>Refresh</Text>
             </TouchableOpacity>
             <Text>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
+            <Text>Current User: {myShit.currentUser}</Text>
             <Text>{this.state.message}</Text>
             <ListView style={styles.listContainer} dataSource={dataSource.cloneWithRows(this.state.dataSource)} renderRow={(rowData) => <View style={styles.listRow}>
                     <Image source={{
