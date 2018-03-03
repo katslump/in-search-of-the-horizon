@@ -18,7 +18,7 @@ class LoginScreen extends React.Component {
     constructor() {
         super();
         this.state = {
-            username: '',
+            email: '',
             password: '',
             message: ''
         };
@@ -29,37 +29,34 @@ class LoginScreen extends React.Component {
     };
 
     componentDidMount() {
-        
+
     }
 
     register() {
         this.props.navigation.navigate('Signup');
     }
 
-    login(username, password) {
+    login(email, password) {
         let self = this;
-        return fetch('https://hohoho-backend.herokuapp.com/login', {
-            method: 'POST',
+        // console.log(this.state.email, this.state.password)
+        fetch(`http://10.2.110.153:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
+            method: 'GET',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-                username: username || this.state.username,
-                password: password || this.state.password
-            })
         }).then((response) => response.json()).then((responseJson) => {
-            if (responseJson.success) {
-                AsyncStorage.setItem('user', JSON.stringify({username: self.state.username, password: self.state.password}));
+            if (responseJson) {
+                AsyncStorage.setItem('email', JSON.stringify({email: self.state.email, password: self.state.password}));
                 this.props.navigation.navigate('Users');
             } else {
                 this.setState({message: responseJson.error});
             }
         }).catch((err) => {
+            console.log(err)
             this.setState({message: err});
         });
 
     }
-
     render() {
         return (<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
@@ -77,7 +74,7 @@ class LoginScreen extends React.Component {
                         justifyContent: 'flex-start'
                     }}>
                     <View style={styles.inputBlock}>
-                        <TextInput style={styles.inputBlockEl} placeholder="Enter your username" onChangeText={(text) => this.setState({username: text})}/>
+                        <TextInput style={styles.inputBlockEl} placeholder="Enter your email" onChangeText={(text) => this.setState({email: text})}/>
                         <TextInput style={styles.inputBlockEl} placeholder="Enter your password" secureTextEntry={true} onChangeText={(text) => this.setState({password: text})}/>
                         <View style={styles.inputBlockLine}></View>
                     </View>

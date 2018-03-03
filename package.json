@@ -5,6 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node_modules/babel-cli/bin/babel.js ./ --source-maps --out-dir dist",
     "start": "node_modules/nodemon/bin/nodemon.js -- node_modules/babel-cli/bin/babel-node.js ./backend/server.js",
+    "start_james": "nodemon -- node_modules/babel-cli/bin/babel-node.js ./backend/server.js",
     "populate": "node_modules/babel-cli/bin/babel-node.js populate.js"
   },
   "dependencies": {
@@ -16,9 +17,10 @@
     "moment": "^2.20.1",
     "mongoose": "^5.0.7",
     "morgan": "^1.9.0",
+    "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-navigation": "^1.3.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-navigation": "^1.3.0"
   },
   "devDependencies": {
     "babel": "^6.23.0",

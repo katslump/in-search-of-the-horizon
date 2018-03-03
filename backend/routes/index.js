@@ -14,13 +14,13 @@ var User = require('../models/User.js');
 
 // Enables the end user to create a new todo item in the database
 app.post('/register', (req, res) => {
+  console.log('does this work')
   const newUser= new User({
     email: req.body.email,
     password: req.body.password,
     f_name: req.body.fname,
     l_name: req.body.lname
   });
-
   newTodo.save().then(response => {
       console.log(response);
     res.send(response);

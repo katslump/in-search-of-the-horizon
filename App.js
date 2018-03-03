@@ -29,7 +29,7 @@ export default StackNavigator({
 Users: {
   screen: UsersScreen
 }
-}, {initialRouteName: 'Users'});
+}, {initialRouteName: 'Login'});
 
 export const styles = StyleSheet.create({
     container: {
@@ -114,7 +114,8 @@ export const styles = StyleSheet.create({
         height: 40,
         backgroundColor: 'transparent',
         borderBottomWidth: 2,
-        borderBottomColor: '#ebebeb'
+        borderBottomColor: '#ebebeb',
+        marginBottom: 4,
       },
       inputBlockLine: {
         top: -2,

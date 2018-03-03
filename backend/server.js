@@ -62,6 +62,38 @@ app.get('/users', (req, res) => {
   })
 });
 
+app.get('/login', (req,res) => {
+  console.log(req.query.email, req.query.password)
+  User.find({email:req.query.email, password:req.query.password}, function(error, results) {
+    if(error) {
+      res.status(400).send('error in finding email')
+    } else {
+      res.json(results)
+    }
+  })
+})
+
+app.post('/register', (req, res) => {
+  // console.log('help me')
+  console.log(req.body.email, req.body.password, req.body.f_name, req.body.l_name)
+  const newUser = new User({
+    email: req.body.email,
+    password: req.body.password,
+    f_name: req.body.f_name,
+    l_name: req.body.l_name
+  });
+  newUser.save().then(response => {
+    response.success = true;
+    console.log(response);
+    res.json(response);
+  }).catch(error => {
+    console.log('maybe')
+    // console.log(error)
+    res.send(error);
+  })
+});
+
+
 // Launch the server on port 3000
 const server = app.listen(port, () => {
   const { address, port } = server.address();
