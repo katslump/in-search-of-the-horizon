@@ -25,5 +25,6 @@ var userSchema = new Schema({
     phone: String
 });
 
+
 // Export Mongoose model
 export default mongoose.model('User', userSchema);

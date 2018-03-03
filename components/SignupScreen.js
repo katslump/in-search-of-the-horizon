@@ -18,7 +18,9 @@ class SignupScreen extends React.Component {
   constructor() {
     super();
     this.state = {
-      username: '',
+      f_name:'',
+      l_name:'',
+      email: '',
       password: '',
       message: ''
     };
@@ -26,25 +28,29 @@ class SignupScreen extends React.Component {
   static navigationOptions = {
     title: 'Register'
   };
-
   register() {
-    fetch('https://hohoho-backend.herokuapp.com/register', {
+    fetch('http://10.2.110.153:3000/register', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({username: this.state.username, password: this.state.password})
-    }).then((response) => response.json()).then((responseJson) => {
-      if (responseJson.success) {
+      body: JSON.stringify({email: this.state.email, password: this.state.password, f_name: this.state.f_name, l_name: this.state.l_name})
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((responseJson) => {
+      if (responseJson) {
         this.props.navigation.goBack();
       } else {
         this.setState({message: responseJson.error});
       }
     }).catch((err) => {
+      console.log("probably", err)
       this.setState({message: err});
     });
+    // console.log(this.state.f_name, this.state.l_name, this.state.email, this.state.password)
   }
-
   render() {
     return (<View style={styles.container}>
       <View style={{
@@ -52,7 +58,7 @@ class SignupScreen extends React.Component {
           flex: .5,
           justifyContent: 'flex-end'
         }}>
-        <Text style={styles.textBig}>Register</Text>
+        <Text style={styles.textBig}>Horizonite Register</Text>
       </View>
       <View style={{
           flexDirection: 'column',
@@ -61,7 +67,9 @@ class SignupScreen extends React.Component {
           justifyContent: 'flex-start'
         }}>
         <View style={styles.inputBlock}>
-          <TextInput style={styles.inputBlockEl} placeholder="Enter your username" onChangeText={(text) => this.setState({username: text})}/>
+          <TextInput style={styles.inputBlockEl} placeholder="Enter your First Name" onChangeText={(text) => this.setState({f_name: text})}/>
+          <TextInput style={styles.inputBlockEl} placeholder="Enter your Last Name" onChangeText={(text) => this.setState({l_name: text})}/>
+          <TextInput style={styles.inputBlockEl} placeholder="Enter your email" onChangeText={(text) => this.setState({email: text})}/>
           <TextInput style={styles.inputBlockEl} placeholder="Enter your password" secureTextEntry={true} onChangeText={(text) => this.setState({password: text})}/>
           <View style={styles.inputBlockLine}></View>
         </View>
