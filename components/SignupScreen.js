@@ -51,7 +51,6 @@ class SignupScreen extends React.Component {
     });
     // console.log(this.state.f_name, this.state.l_name, this.state.email, this.state.password)
   }
-
   render() {
     return (<View style={styles.container}>
       <View style={{
