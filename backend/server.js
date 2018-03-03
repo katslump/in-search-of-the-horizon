@@ -5,9 +5,13 @@ import axios from 'axios';
 import mongoose from 'mongoose';
 import routes from './routes/index';
 import bodyParser from 'body-parser';
+import Expo from 'expo-server-sdk';
 
 // Import models
 import User from './models/User.js';
+
+// Create a new Expo SDK client
+let expo = new Expo();
 
 // Set port
 var port = parseInt(process.env.PORT) || 3000;
@@ -60,6 +64,18 @@ function radius(currentUser, allUsers) {
     let objlong = parseFloat(user.long);
     return currentUser.email !== user.email && currentUser.lat > objlat - .4 && currentUser.lat < objlat + .4 && currentUser.long > objlong - .4 && currentUser.long < objlong + .4;
   })
+  console.log(currentUser.pushToken)
+  const messages = group.map(person => ({
+      to: person.pushToken,
+      sound: 'default',
+      body: `Current User ${currentUser.f_name} is near you!`,
+      // data: { withSome: 'data' },
+    })).filter(person => person.to)
+    // console.log(messages)
+
+  let chunks = expo.chunkPushNotifications(messages);
+  // console.log(JSON.stringify(chunks))
+  Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log)
   User.findOneAndUpdate({email:currentUser.email},{$set:{group: group} }, function(error, pos) {
     if(error) {
       console.log('SOMETHING BAD HAPPENED')
@@ -87,14 +103,25 @@ app.get('/users', (req, res) => {
   })
 });
 
+app.post('/push-token', (req,res) => {
+  console.log(typeof(req.body.token.value))
+  User.findOneAndUpdate({email: req.body.user.username},{$set:{pushToken: req.body.token.value}}, function(error, pos) {
+    if(error) {
+      console.log(error)
+    }
+  })
+})
 
 app.get('/login', (req,res) => {
-  console.log(req.query.email, req.query.password)
-  User.find({email:req.query.email, password:req.query.password}, function(error, results) {
-    if(error) {
+  User.findOne({email:req.query.email}, function(error, results) {
+    if(!results) {
       res.status(400).send('error in finding email')
     } else {
-      res.json(results)
+      if(results.password === req.query.password) {
+        res.json(results)
+      } else {
+        res.status(400).send('error in finding password')
+      }
     }
   })
 })

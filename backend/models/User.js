@@ -13,6 +13,7 @@ var userSchema = new Schema({
         type: String,
         unique: true
     },
+    pushToken: String,
     lat: Number,
     long: Number,
     updated_last: Date,
