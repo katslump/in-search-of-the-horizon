@@ -5,7 +5,7 @@ var locationSchema = new Schema({
     lat: Number,
     long: Number,
     last_updated: Date,
-    user_id: Number
+    user_id: String
 });
 
 // Export Mongoose model
