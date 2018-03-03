@@ -93,9 +93,9 @@ class UsersScreen extends React.Component {
     componentDidMount() {
         let self = this;
         fetch(`http://10.2.110.153:3000/users?currentUser=${myShit.currentUser}`).then((response) => response.json()).then(function(responseJson) {
-          // console.log('does it get into here')
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
+            console.log(error);
             self.setState({message: error});
         });
     }
