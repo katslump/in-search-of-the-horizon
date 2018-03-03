@@ -11,7 +11,8 @@ import {
     Button,
     AsyncStorage,
     Image,
-    Keyboard
+    Keyboard,
+    Modal
 } from 'react-native';
 import {Location, Permissions} from 'expo';
 import {styles} from '../App';
@@ -29,10 +30,20 @@ class UsersScreen extends React.Component {
         this.state = {
             dataSource: ds.cloneWithRows([]),
             message: '',
-            currentLocation: ''
+            currentLocation: '',
+            rowData: null,
+            modalVisible: false
         };
     }
-    
+
+    openModal(rowData) {
+      this.setState({modalVisible:true, rowData: rowData});
+    }
+
+    closeModal() {
+      this.setState({modalVisible:false});
+    }
+
     getLocation = async () => {
 
         let self = this;
@@ -69,7 +80,6 @@ class UsersScreen extends React.Component {
                                   text: 'Cool'
                               }
                           ]);
-
                       } else {
                           this.setState({message: "There has been an error"});
                       }
@@ -81,8 +91,6 @@ class UsersScreen extends React.Component {
                 alert(error);
               }
             );
-
-
         }
     }
 
@@ -92,6 +100,7 @@ class UsersScreen extends React.Component {
 
     componentDidMount() {
         let self = this;
+        this.getLocation();
         fetch(`http://10.2.110.153:3000/users?currentUser=${myShit.currentUser}`).then((response) => response.json()).then(function(responseJson) {
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
@@ -100,12 +109,36 @@ class UsersScreen extends React.Component {
         });
     }
 
+
+    modal = () => {
+      let rowDatas = this.state.rowData;
+    return (
+      <Modal animationIn={'slideInDown'} animationOut={'slideInUp'} visible={this.state.modalVisible} animationType={'slide'} onRequestClose={() => this.closeModal()}>
+        <Button style={{marginTop: 20}}
+              onPress={() => this.closeModal()}
+              title="Back"
+          />
+          <Image source={{
+                  uri: rowDatas.photo
+              }} style={{
+                  width: 100,
+                  height: 100
+              }}/>
+          <Text>{rowDatas.f_name}
+              {rowDatas.l_name}</Text>
+          <Text>{rowDatas.phone}</Text>
+          <Text>{rowDatas.location_name ? "Current Location:" + rowDatas.location_name : "" }</Text>
+          <Text>{JSON.stringify(rowDatas.cohort)}</Text>
+      </Modal>
+    )
+  }
+
     render() {
         var dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => (r1 !== r2)
         });
-
         return (<View style={styles.container}>
+            {this.state.modalVisible ? this.modal() : null}
             <TouchableOpacity onPress={() => {
                     this.getLocation()
                 }}>
@@ -115,17 +148,19 @@ class UsersScreen extends React.Component {
             <Text>Current User: {myShit.currentUser}</Text>
             <Text>{this.state.message}</Text>
             <ListView style={styles.listContainer} dataSource={dataSource.cloneWithRows(this.state.dataSource)} renderRow={(rowData) => <View style={styles.listRow}>
+                  <TouchableOpacity style={{justifyContent:'center', alignItems:'center'}} onPress={() => {this.openModal(rowData)}} >
                     <Image source={{
                             uri: rowData.photo
                         }} style={{
                             width: 100,
-                            height: 100
+                            height: 100,
                         }}/>
                     <Text>{rowData.f_name}
                         {rowData.l_name}</Text>
                     <Text>{rowData.phone}</Text>
                     <Text>{rowData.location_name ? "Current Location:" + rowData.location_name : "" }</Text>
                     <Text>{JSON.stringify(rowData.cohort)}</Text>
+                  </TouchableOpacity>
                 </View>}/>
         </View>)
     };

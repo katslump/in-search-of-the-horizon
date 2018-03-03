@@ -13,8 +13,13 @@ import {
     Keyboard
 } from 'react-native';
 import {styles} from '../App';
-
 export const myShit = {}
+import { Permissions, Notifications } from 'expo';
+const PUSH_ENDPOINT = 'http://10.2.110.153:3000/push-token';
+
+let token = '';
+
+export const newToken = {}
 
 class LoginScreen extends React.Component {
     constructor() {
@@ -26,12 +31,38 @@ class LoginScreen extends React.Component {
         };
 
     }
+
+     registerForPushNotificationsAsync = async() => {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+      );
+      let finalStatus = existingStatus;
+
+      // only ask if permissions have not already been determined, because
+      // iOS won't necessarily prompt the user a second time.
+      if (existingStatus !== 'granted') {
+        // Android remote notification permissions are granted during the app
+        // install, so this will only ask on iOS
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+      }
+
+      // Stop here if the user did not grant permissions
+      if (finalStatus !== 'granted') {
+        return;
+      }
+
+      // Get the token that uniquely identifies this device
+      token = await Notifications.getExpoPushTokenAsync();
+      newToken.token = token;
+    }
+
     static navigationOptions = {
         title: 'Login'
     };
 
     componentDidMount() {
-
+      this.registerForPushNotificationsAsync();
     }
 
     register() {
@@ -40,6 +71,15 @@ class LoginScreen extends React.Component {
 
     login(email, password) {
         let self = this;
+        if (!self.state.email || !self.state.password) {
+          this.setState({
+            message:'Invalid Email or Password'
+          });
+          return;
+        }
+        this.setState({
+          message:''
+        })
         // console.log(this.state.email, this.state.password)
         fetch(`http://10.2.110.153:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
             method: 'GET',
@@ -51,25 +91,41 @@ class LoginScreen extends React.Component {
                 AsyncStorage.setItem('email', JSON.stringify({email: self.state.email, password: self.state.password}));
                 // console.log(self.state.email)
                 myShit.currentUser = self.state.email;
+                fetch(PUSH_ENDPOINT, {
+                  method: 'POST',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    token: {
+                      value: token,
+                    },
+                    user: {
+                      username: self.state.email,
+                    },
+                  }),
+                });
                 this.props.navigation.navigate('Users');
             } else {
-                this.setState({message: responseJson.error});
+                this.setState({message: "Invalid Login"});
             }
-        }).catch((err) => {
-            console.log(err)
-            this.setState({message: err});
-        });
-
+        }).catch((error) => {
+          this.setState({
+            message: 'Invalid Email or Password'
+          })
+        })
     }
     render() {
         return (<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
                 <View style={{
                         flexDirection: 'column',
-                        flex: .5,
-                        justifyContent: 'flex-end'
+                        flex: .4,
+                        justifyContent: 'center'
                     }}>
                     <Text style={styles.textBig}>In Search of the Horizon</Text>
+                    <Text>{this.state.message}</Text>
                 </View>
                 <View style={{
                         flexDirection: 'column',
