@@ -18,6 +18,7 @@ import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 
+
 class UsersScreen extends React.Component {
     constructor(props) {
         super(props);
@@ -39,45 +40,48 @@ class UsersScreen extends React.Component {
         if (status !== 'granted') {
             alert("Error getting location: " + status);
         } else {
-            let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-            currLocation = {
-                lat: location.coords.latitude,
-                long: location.coords.longitude,
-                last_updated: new Date(),
-                user_id: "5a9999e3f379104f91ec5001"
-            };
-            fetch('http://Kats-MacBook-Pro.local:3000/location', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(currLocation)
-            }).then((response) => response.json()).then((responseJson) => {
-                if (responseJson) {
-                    Alert.alert('Success', 'Your location was refreshed', [
-                        {
-                            text: 'Cool'
-                        }
-                    ]);
-                    Geocoder.setApiKey("AIzaSyAuP9_agcMpX9v27aVlU4LggxmrpzvfITY"); // use a valid API key
-                    Geocoder.getFromLatLng(location.coords.latitude, location.coords.longitude)
-                    .then(
-                          json => {
-                            self.setState({
-                                currentLocation: json.results[0].address_components[2].long_name
-                            });
-                          },
-                          error => {
-                            alert(error);
-                          }
-                        );
 
-                } else {
-                    this.setState({message: "There has been an error"});
-                }
-            }).catch((err) => {
-                this.setState({message: err});
-            });
+            let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+            Geocoder.setApiKey("AIzaSyAuP9_agcMpX9v27aVlU4LggxmrpzvfITY"); // use a valid API key
+
+            Geocoder.getFromLatLng(location.coords.latitude, location.coords.longitude)
+            .then(
+              json => {
+                  currLocation = {
+                      lat: location.coords.latitude,
+                      long: location.coords.longitude,
+                      last_updated: new Date(),
+                      user_id: "5a9999e3f379104f91ec5002",
+                      location_name: json.results[0].address_components[2].long_name
+                  };
+                  this.setState({currentLocation: json.results[0].address_components[2].long_name});
+                  fetch('http://Kats-MacBook-Pro.local:3000/location', {
+                      method: 'POST',
+                      headers: {
+                          "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify(currLocation)
+                  }).then((response) => response.json()).then((responseJson) => {
+                      if (responseJson) {
+                          Alert.alert('Success', 'Your location was refreshed', [
+                              {
+                                  text: 'Cool'
+                              }
+                          ]);
+
+                      } else {
+                          this.setState({message: "There has been an error"});
+                      }
+                  }).catch((err) => {
+                      this.setState({message: err});
+                  });
+              },
+              error => {
+                alert(error);
+              }
+            );
+
+
         }
     }
 
@@ -117,6 +121,7 @@ class UsersScreen extends React.Component {
                     <Text>{rowData.f_name}
                         {rowData.l_name}</Text>
                     <Text>{rowData.phone}</Text>
+                    <Text>{rowData.location_name ? "Current Location:" + rowData.location_name : "" }</Text>
                     <Text>{JSON.stringify(rowData.cohort)}</Text>
                 </View>}/>
         </View>)
