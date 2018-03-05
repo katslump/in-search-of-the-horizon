@@ -46,10 +46,8 @@ class SignupScreen extends React.Component {
         this.setState({message: responseJson.error});
       }
     }).catch((err) => {
-      console.log("probably", err)
       this.setState({message: err});
     });
-    // console.log(this.state.f_name, this.state.l_name, this.state.email, this.state.password)
   }
   render() {
     return (<View style={styles.container}>

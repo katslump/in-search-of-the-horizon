@@ -18,7 +18,7 @@ import {Location, Permissions} from 'expo';
 import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
-import {myShit} from './LoginScreen'
+import {transfer} from './LoginScreen'
 
 class UsersScreen extends React.Component {
     constructor(props) {
@@ -27,6 +27,7 @@ class UsersScreen extends React.Component {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
+
         this.state = {
             dataSource: ds.cloneWithRows([]),
             message: '',
@@ -63,7 +64,7 @@ class UsersScreen extends React.Component {
                       lat: location.coords.latitude,
                       long: location.coords.longitude,
                       last_updated: new Date(),
-                      user_id: myShit,
+                      user_id: transfer,
                       location_name: json.results[0].address_components[2].long_name
                   };
                   this.setState({currentLocation: json.results[0].address_components[2].long_name});
@@ -101,7 +102,7 @@ class UsersScreen extends React.Component {
     componentDidMount() {
         let self = this;
         this.getLocation();
-        fetch(`http://10.2.110.153:3000/users?currentUser=${myShit.currentUser}`).then((response) => response.json()).then(function(responseJson) {
+        fetch(`http://10.2.110.153:3000/users?currentUser=${transfer.currentUser}`).then((response) => response.json()).then(function(responseJson) {
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
             console.log(error);
@@ -145,7 +146,7 @@ class UsersScreen extends React.Component {
                 <Text>Refresh</Text>
             </TouchableOpacity>
             <Text>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
-            <Text>Current User: {myShit.currentUser}</Text>
+            <Text>Current User: {transfer.currentUser}</Text>
             <Text>{this.state.message}</Text>
             <ListView style={styles.listContainer} dataSource={dataSource.cloneWithRows(this.state.dataSource)} renderRow={(rowData) => <View style={styles.listRow}>
                   <TouchableOpacity style={{justifyContent:'center', alignItems:'center'}} onPress={() => {this.openModal(rowData)}} >

@@ -1,34 +1,33 @@
 import React from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  TextInput,
-  ListView,
-  Alert,
-  Button,
-  AsyncStorage,
-  Keyboard
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    TextInput,
+    ListView,
+    Alert,
+    Button,
+    AsyncStorage,
+    Keyboard
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import LoginScreen from './components/LoginScreen';
 import SignupScreen from './components/SignupScreen';
 import UsersScreen from './components/UsersScreen';
 
-
 //Navigator
 export default StackNavigator({
-  Login: {
-    screen: LoginScreen
-  },
-  Signup: {
-    screen: SignupScreen
-},
-Users: {
-  screen: UsersScreen
-}
+    Login: {
+        screen: LoginScreen
+    },
+    Signup: {
+        screen: SignupScreen
+    },
+    Users: {
+        screen: UsersScreen
+    }
 }, {initialRouteName: 'Login'});
 
 export const styles = StyleSheet.create({
@@ -37,14 +36,14 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF'
-      },
-      containerFull: {
+    },
+    containerFull: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
         backgroundColor: '#F5FCFF'
-      },
-      listRow: {
+    },
+    listRow: {
         flex: 1,
         width: '100%',
         flexDirection: 'column',
@@ -53,12 +52,12 @@ export const styles = StyleSheet.create({
         borderBottomColor: '#ebebeb',
         borderBottomWidth: 2,
         padding: 10
-      },
-      listContainer: {
+    },
+    listContainer: {
         margin: 10,
         width: '100%'
-      },
-      input: {
+    },
+    input: {
         margin: 0,
         borderBottomColor: '#212121',
         borderWidth: 1,
@@ -66,23 +65,23 @@ export const styles = StyleSheet.create({
         marginTop: 12,
         width: '100%',
         color: '#212121'
-      },
-      welcome: {
+    },
+    welcome: {
         fontSize: 20,
         textAlign: 'center',
         margin: 10
-      },
-      instructions: {
+    },
+    instructions: {
         textAlign: 'center',
         color: 'red',
         marginBottom: 5
-      },
-      textBig: {
+    },
+    textBig: {
         fontSize: 36,
         textAlign: 'center',
         margin: 10
-      },
-      button: {
+    },
+    button: {
         alignSelf: 'stretch',
         paddingTop: 10,
         paddingBottom: 10,
@@ -90,38 +89,38 @@ export const styles = StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
         borderRadius: 2
-      },
-      buttonRed: {
+    },
+    buttonRed: {
         backgroundColor: '#FF585B'
-      },
-      buttonBlue: {
+    },
+    buttonBlue: {
         backgroundColor: '#0074D9'
-      },
-      buttonGreen: {
+    },
+    buttonGreen: {
         backgroundColor: '#2ECC40'
-      },
-      buttonLabel: {
+    },
+    buttonLabel: {
         textAlign: 'center',
         fontSize: 16,
         color: 'white'
-      },
-      inputBlock: {
+    },
+    inputBlock: {
         width: '80%',
         margin: 30
-      },
-      inputBlockEl: {
+    },
+    inputBlockEl: {
         width: '100%',
         height: 40,
         backgroundColor: 'transparent',
         borderBottomWidth: 2,
         borderBottomColor: '#ebebeb',
-        marginBottom: 4,
-      },
-      inputBlockLine: {
+        marginBottom: 4
+    },
+    inputBlockLine: {
         top: -2,
         width: 0,
         height: 2,
         position: 'relative',
         backgroundColor: '#FF9800'
-      }
+    }
 });

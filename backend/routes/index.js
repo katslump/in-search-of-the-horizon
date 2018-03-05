@@ -9,7 +9,4 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-// Import TodoItem model
-var User = require('../models/User.js');
-
 module.exports = app;

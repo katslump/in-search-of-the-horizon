@@ -13,7 +13,7 @@ import {
     Keyboard
 } from 'react-native';
 import {styles} from '../App';
-export const myShit = {}
+export const transfer = {}
 import { Permissions, Notifications } from 'expo';
 const PUSH_ENDPOINT = 'http://10.2.110.153:3000/push-token';
 
@@ -36,9 +36,10 @@ class LoginScreen extends React.Component {
       const { status: existingStatus } = await Permissions.getAsync(
         Permissions.NOTIFICATIONS
       );
+
       let finalStatus = existingStatus;
 
-      // only ask if permissions have not already been determined, because
+      // Only ask if permissions have not already been determined, because
       // iOS won't necessarily prompt the user a second time.
       if (existingStatus !== 'granted') {
         // Android remote notification permissions are granted during the app
@@ -80,7 +81,7 @@ class LoginScreen extends React.Component {
         this.setState({
           message:''
         })
-        // console.log(this.state.email, this.state.password)
+
         fetch(`http://10.2.110.153:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
             method: 'GET',
             headers: {
@@ -89,8 +90,8 @@ class LoginScreen extends React.Component {
         }).then((response) => response.json()).then((responseJson) => {
             if (responseJson) {
                 AsyncStorage.setItem('email', JSON.stringify({email: self.state.email, password: self.state.password}));
-                // console.log(self.state.email)
-                myShit.currentUser = self.state.email;
+
+                transfer.currentUser = self.state.email;
                 fetch(PUSH_ENDPOINT, {
                   method: 'POST',
                   headers: {
