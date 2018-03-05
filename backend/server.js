@@ -84,7 +84,6 @@ function notificationCheck(currentUser, allUsers) {
     return group;
 }
 
-// Enables the end user to grab all todo items in the database
 app.get('/users', (req, res) => {
     let user = req.query.currentUser
     User.find().catch(error => {
@@ -131,14 +130,19 @@ app.get('/login', (req, res) => {
 
 // Allows user to register
 app.post('/register', (req, res) => {
-    const newUser = new User({email: req.body.email, password: req.body.password, f_name: req.body.f_name, l_name: req.body.l_name});
-    newUser.save().then(response => {
-        response.success = true;
-        res.json(response);
-    }).catch(error => {
-        console.log(error)
-        res.send(error);
-    });
+  const newUser = new User({
+    email: req.body.email,
+    password: req.body.password,
+    f_name: req.body.f_name,
+    l_name: req.body.l_name
+  });
+  newUser.save().then(response => {
+    response.success = true;
+    res.json(response);
+  }).catch(error => {
+    console.log(error)
+    res.send(error);
+  });
 });
 
 // Records users latest position and saves to db

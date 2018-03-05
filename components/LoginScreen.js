@@ -118,7 +118,8 @@ class LoginScreen extends React.Component {
         })
     }
     render() {
-        return (<TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        return (
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.container}>
                 <View style={{
                         flexDirection: 'column',
