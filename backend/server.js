@@ -48,33 +48,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // Configure database endpoint pathes
-// app.use('/', routes);
-
-
-
 app.get('/', (req, res) => {
   res.json({ message: "Welcome to the home page!" })
   }
 );
 
 function radius(currentUser, allUsers) {
-
   let group = allUsers.filter(user => {
     let objlat = parseFloat(user.lat);
     let objlong = parseFloat(user.long);
     return currentUser.email !== user.email && currentUser.lat > objlat - .4 && currentUser.lat < objlat + .4 && currentUser.long > objlong - .4 && currentUser.long < objlong + .4;
   })
-  console.log(currentUser.pushToken)
   const messages = group.map(person => ({
       to: person.pushToken,
       sound: 'default',
       body: `Current User ${currentUser.f_name} is near you!`,
       // data: { withSome: 'data' },
     })).filter(person => person.to)
-    // console.log(messages)
 
   let chunks = expo.chunkPushNotifications(messages);
-  // console.log(JSON.stringify(chunks))
   Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log)
   User.findOneAndUpdate({email:currentUser.email},{$set:{group: group} }, function(error, pos) {
     if(error) {
@@ -85,26 +77,21 @@ function radius(currentUser, allUsers) {
 }
 
 
-// Enables the end user to grab all todo items in the database
 app.get('/users', (req, res) => {
   let user = req.query.currentUser
   console.log(user);
   User.find().catch(error => {
       res.json({ error: error});
   }).then(response => {
-    // console.log(response)
     User.findOne({email:user})
     .then((result) =>{
-      // console.log(result)
-      // console.log(result.lat)
       let group = radius(result, response)
       res.json({users:group})
-    })//.catch(error => res.json({ error: error}))
+    })
   })
 });
 
 app.post('/push-token', (req,res) => {
-  console.log(typeof(req.body.token.value))
   User.findOneAndUpdate({email: req.body.user.username},{$set:{pushToken: req.body.token.value}}, function(error, pos) {
     if(error) {
       console.log(error)
@@ -127,7 +114,6 @@ app.get('/login', (req,res) => {
 })
 
 app.post('/register', (req, res) => {
-  // console.log('help me')
   console.log(req.body.email, req.body.password, req.body.f_name, req.body.l_name)
   const newUser = new User({
     email: req.body.email,
