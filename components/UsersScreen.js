@@ -2,34 +2,64 @@ import React from 'react';
 import {
     StyleSheet,
     View,
-    Text,
     TouchableOpacity,
     TouchableWithoutFeedback,
     TextInput,
     ListView,
     Alert,
-    Button,
     AsyncStorage,
     Image,
     Keyboard,
     Modal
 } from 'react-native';
 import {Location, Permissions} from 'expo';
-import {styles} from '../App';
+// import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
-import {transfer} from './LoginScreen'
+import {transfer} from './LoginScreen';
+import { Button, Container, Footer, FooterTab, Icon, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Col, Row, Input } from 'native-base';
+
+const styles = StyleSheet.create({
+  tweetHead: {
+    flexDirection: "row",
+    // justifyContent: "flex-start",
+    // alignItems: "center",
+    padding: 10,
+    paddingBottom: 0
+  },
+  timeStamp: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    padding: 10,
+    borderBottomColor: "#CCC",
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  tweetFooter: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    borderBottomColor: "#CCC",
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+  footerIcons: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  tweetReply: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 10,
+    paddingBottom: 0
+  }
+});
+
 
 class UsersScreen extends React.Component {
     constructor(props) {
         super(props);
 
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-        });
-
         this.state = {
-            dataSource: ds.cloneWithRows([]),
+            dataSource: [],
             message: '',
             currentLocation: '',
             rowData: null,
@@ -68,7 +98,7 @@ class UsersScreen extends React.Component {
                       location_name: json.results[0].address_components[2].long_name
                   };
                   this.setState({currentLocation: json.results[0].address_components[2].long_name});
-                  fetch('http://10.2.110.153:3000/location', {
+                  fetch('http://172.16.1.25:3000/location', {
                       method: 'POST',
                       headers: {
                           "Content-Type": "application/json"
@@ -76,11 +106,7 @@ class UsersScreen extends React.Component {
                       body: JSON.stringify(currLocation)
                   }).then((response) => response.json()).then((responseJson) => {
                       if (responseJson) {
-                          Alert.alert('Success', 'Your location was refreshed', [
-                              {
-                                  text: 'Cool'
-                              }
-                          ]);
+
                       } else {
                           this.setState({message: "There has been an error"});
                       }
@@ -96,30 +122,26 @@ class UsersScreen extends React.Component {
     }
 
     static navigationOptions = ({navigation}) => {
-        return {title: 'Users'}
+        return {title: 'Your Friends'}
     };
 
     componentDidMount() {
         let self = this;
         this.getLocation();
-        fetch(`http://10.2.110.153:3000/users?currentUser=${transfer.currentUser}`).then((response) => response.json()).then(function(responseJson) {
+        fetch(`http://172.16.1.25:3000/users?currentUser=${transfer.currentUser}`).then((response) => response.json()).then(function(responseJson) {
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
-            console.log(error);
             self.setState({message: error});
         });
     }
-
 
     modal = () => {
       let rowDatas = this.state.rowData;
     return (
       <Modal animationIn={'slideInDown'} animationOut={'slideInUp'} visible={this.state.modalVisible} animationType={'slide'} onRequestClose={() => this.closeModal()}>
-        <Button style={{marginTop: 20}}
-              onPress={() => this.closeModal()}
-              title="Back"
-          />
-          <Image source={{
+        <Button light onPress={() => this.closeModal()}
+              title="Back"/>
+          <Thumbnail source={{
                   uri: rowDatas.photo
               }} style={{
                   width: 100,
@@ -135,35 +157,60 @@ class UsersScreen extends React.Component {
   }
 
     render() {
-        var dataSource = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => (r1 !== r2)
-        });
-        return (<View style={styles.container}>
+        return (<Container>
+            <Content style={{ backgroundColor: "white" }}>
             {this.state.modalVisible ? this.modal() : null}
-            <TouchableOpacity onPress={() => {
+            <Button iconLeft block light title="Refresh"
+                onPress={() => {
                     this.getLocation()
                 }}>
+                <Icon name='refresh' />
                 <Text>Refresh</Text>
-            </TouchableOpacity>
-            <Text>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
-            <Text>Current User: {transfer.currentUser}</Text>
-            <Text>{this.state.message}</Text>
-            <ListView style={styles.listContainer} dataSource={dataSource.cloneWithRows(this.state.dataSource)} renderRow={(rowData) => <View style={styles.listRow}>
-                  <TouchableOpacity style={{justifyContent:'center', alignItems:'center'}} onPress={() => {this.openModal(rowData)}} >
-                    <Image source={{
+            </Button>
+                <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
+                <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>{transfer.currentUser}</Text>
+            <List style={styles.tweetHead} dataArray={this.state.dataSource} renderRow={(rowData) =>
+                <ListItem avatar onPress={() => {this.openModal(rowData)}}>
+                    <Left>
+                        <Thumbnail large source={{
                             uri: rowData.photo
-                        }} style={{
-                            width: 100,
-                            height: 100,
                         }}/>
-                    <Text>{rowData.f_name}
-                        {rowData.l_name}</Text>
-                    <Text>{rowData.phone}</Text>
-                    <Text>{rowData.location_name ? "Current Location:" + rowData.location_name : "" }</Text>
-                    <Text>{JSON.stringify(rowData.cohort)}</Text>
-                  </TouchableOpacity>
-                </View>}/>
-        </View>)
+                    </Left>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        paddingLeft: 10,
+                        height: 56
+                      }}
+                    >
+                        <Text style={{ fontWeight: "bold", fontSize: 18 }}>{rowData.f_name} {rowData.l_name}</Text>
+                        <Text style={{ color: "#999", fontSize: 14 }}>{rowData.location_name ? rowData.location_name : "" }</Text>
+                    </View>
+                  <View style={styles.tweetFooter}>
+            <View>
+              <Button transparent dark>
+                <Icon name="ios-heart-outline" />
+              </Button>
+            </View>
+            <View>
+              <Button transparent dark>
+                <Icon name="ios-mail-outline" />
+              </Button>
+            </View>
+          </View>
+              </ListItem>
+            }>
+          </List>
+        </Content>
+            <Footer>
+         <FooterTab>
+             <Body>
+                 <Text>{this.state.message ? this.state.message.toString() : ''}</Text>
+             </Body>
+         </FooterTab>
+       </Footer>
+        </Container>)
     };
 }
 

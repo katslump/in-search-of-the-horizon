@@ -69,8 +69,10 @@ function notificationCheck(currentUser, allUsers) {
 
     let chunks = expo.chunkPushNotifications(messages);
 
+
     // Sends notifcations to users using Expo API
-    Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log)User.findOneAndUpdate({
+    Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log);
+    User.findOneAndUpdate({
         email: currentUser.email
     }, {
         $set: {
