@@ -18,7 +18,7 @@ import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 import {transfer} from './LoginScreen';
 import TimeAgo from 'react-timeago';
-import { Button, Container, Footer, FooterTab, Icon, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Col, Row, Input } from 'native-base';
+import { Button,Card, CardItem, Container, Footer, FooterTab, Icon, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Col, Row, Input } from 'native-base';
 
 const styles = StyleSheet.create({
   tweetHead: {
@@ -103,7 +103,8 @@ class UsersScreen extends React.Component {
     }
 
     static navigationOptions = ({navigation}) => {
-        return {title: 'Near You'}
+        return {title: 'Near You',
+                headerRight: (<Button transparent><Icon name="settings"/></Button>)}
     };
 
     componentDidMount() {
@@ -119,20 +120,37 @@ class UsersScreen extends React.Component {
     modal = () => {
       let rowDatas = this.state.rowData;
     return (
-      <Modal animationIn={'slideInDown'} animationOut={'slideInUp'} visible={this.state.modalVisible} animationType={'slide'} onRequestClose={() => this.closeModal()}>
-        <Button light onPress={() => this.closeModal()}
-              title="Back"/>
-          <Thumbnail source={{
-                  uri: rowDatas.photo
-              }} style={{
-                  width: 100,
-                  height: 100
-              }}/>
-          <Text>{rowDatas.f_name}
-              {rowDatas.l_name}</Text>
-          <Text>{rowDatas.phone}</Text>
-          <Text>{rowDatas.location_name ? "Current Location:" + rowDatas.location_name : "" }</Text>
-          <Text>{JSON.stringify(rowDatas.cohort)}</Text>
+      <Modal visible={this.state.modalVisible} onRequestClose={() => this.closeModal()}>
+          <Header>
+              <Left>
+            <Button transparent onPress={() => this.closeModal()}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
+        </Header>
+          <Content>
+              <Card style={{paddingTop: 20}}>
+                  <CardItem header>
+                 <Text style={{ fontWeight: "bold", fontSize: 18 }}>{rowDatas.f_name} {rowDatas.l_name}</Text>
+               </CardItem>
+               <CardItem>
+                  <Body>
+                      <Thumbnail source={{
+                              uri: rowDatas.photo
+                          }} style={{
+                              width: 100,
+                              height: 100
+                          }}/>
+                      <Text>{rowDatas.phone}</Text>
+                      <Text>{rowDatas.location_name ? "Current Location:" + rowDatas.location_name : "" }</Text>
+                      <Text>{JSON.stringify(rowDatas.cohort)}</Text>
+                </Body>
+            </CardItem>
+            <CardItem footer>
+                <Text>More info here</Text>
+            </CardItem>
+            </Card>
+        </Content>
       </Modal>
     )
   }
@@ -170,8 +188,8 @@ class UsersScreen extends React.Component {
                         </Text>
                     </View>
                 </View>
-                 {/* <View style={styles.tweetFooter}>
-                    <View>
+                 <View style={styles.tweetFooter}>
+                    {/* <View>
                     </View>
                     <View>
                     </View>
@@ -181,8 +199,8 @@ class UsersScreen extends React.Component {
                       <Button transparent dark>
                         <Icon name="ios-mail-outline" />
                       </Button>
-                    </View>
-                </View> */}
+                    </View> */}
+                </View>
             </Content>
               </ListItem>
             }>
