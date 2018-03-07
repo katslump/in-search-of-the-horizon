@@ -44,7 +44,7 @@ export const newToken = {}
 
 const styles = StyleSheet.create({
   topMargin: {
-    // marginTop: 25
+    marginTop: 25
   },
   content: {
     padding: 10,
