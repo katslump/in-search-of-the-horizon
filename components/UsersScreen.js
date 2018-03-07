@@ -22,8 +22,6 @@ import { Button, Container, Footer, FooterTab, Icon, Header, Content, List, List
 const styles = StyleSheet.create({
   tweetHead: {
     flexDirection: "row",
-    // justifyContent: "flex-start",
-    // alignItems: "center",
     padding: 10,
     paddingBottom: 0
   },
@@ -169,13 +167,11 @@ class UsersScreen extends React.Component {
             </Button>
                 <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
                 <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>{transfer.currentUser}</Text>
-            <List style={styles.tweetHead} dataArray={this.state.dataSource} renderRow={(rowData) =>
+            <List dataArray={this.state.dataSource} renderRow={(rowData) =>
                 <ListItem avatar onPress={() => {this.openModal(rowData)}}>
-                    <Left>
-                        <Thumbnail large source={{
-                            uri: rowData.photo
-                        }}/>
-                    </Left>
+                    <Content style={{ backgroundColor: "white" }}>
+                    <View style={styles.tweetHead}>
+                        <Thumbnail large source={{uri: rowData.photo}}/>
                     <View
                       style={{
                         flex: 1,
@@ -187,18 +183,30 @@ class UsersScreen extends React.Component {
                         <Text style={{ fontWeight: "bold", fontSize: 18 }}>{rowData.f_name} {rowData.l_name}</Text>
                         <Text style={{ color: "#999", fontSize: 14 }}>{rowData.location_name ? rowData.location_name : "" }</Text>
                     </View>
+                </View>
+                <View>
+                  <Text style={{ fontSize: 22, padding: 10 }}>
+                    Bio here
+                  </Text>
+                </View>
+                <View style={styles.timeStamp}>
+                  <Text style={{ color: "#888", fontSize: 16 }}>
+                    time stamp here
+                  </Text>
+                </View>
                   <View style={styles.tweetFooter}>
-            <View>
-              <Button transparent dark>
-                <Icon name="ios-heart-outline" />
-              </Button>
-            </View>
-            <View>
-              <Button transparent dark>
-                <Icon name="ios-mail-outline" />
-              </Button>
-            </View>
-          </View>
+                    <View>
+                      <Button transparent dark>
+                        <Icon name="ios-heart-outline" />
+                      </Button>
+                    </View>
+                    <View>
+                      <Button transparent dark>
+                        <Icon name="ios-mail-outline" />
+                      </Button>
+                    </View>
+                </View>
+            </Content>
               </ListItem>
             }>
           </List>
