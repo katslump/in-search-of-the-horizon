@@ -13,7 +13,6 @@ import {
     Modal
 } from 'react-native';
 import {Location, Permissions} from 'expo';
-// import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 import {transfer} from './LoginScreen';
@@ -104,7 +103,7 @@ class UsersScreen extends React.Component {
 
     static navigationOptions = ({navigation}) => {
         return {title: 'Near You',
-                headerRight: (<Button transparent><Icon name="settings"/></Button>)}
+                headerRight: (<Button transparent onPress={() => navigation.navigate('Settings')}><Icon name="settings"/></Button>)}
     };
 
     componentDidMount() {
@@ -120,7 +119,7 @@ class UsersScreen extends React.Component {
     modal = () => {
       let rowDatas = this.state.rowData;
     return (
-      <Modal visible={this.state.modalVisible} onRequestClose={() => this.closeModal()}>
+      <Modal visible={this.state.modalVisible}  transparent={true} onRequestClose={() => this.closeModal()}>
           <Header>
               <Left>
             <Button transparent onPress={() => this.closeModal()}>
@@ -141,8 +140,8 @@ class UsersScreen extends React.Component {
                               width: 100,
                               height: 100
                           }}/>
-                      <Text>{rowDatas.phone}</Text>
-                      <Text>{rowDatas.location_name ? "Current Location:" + rowDatas.location_name : "" }</Text>
+                      <Text style={{ fontWeight: "bold", fontSize: 12 }}>{rowDatas.phone}</Text>
+                      <Text style={{ color: "#343434", fontSize: 14 }}>{rowDatas.location_name ? rowDatas.location_name : "" }</Text>
                       <Text>{JSON.stringify(rowDatas.cohort)}</Text>
                 </Body>
             </CardItem>
