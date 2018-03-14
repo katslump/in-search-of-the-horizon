@@ -17,7 +17,7 @@ var userSchema = new Schema({
     lat: Number,
     long: Number,
     updated_last: Date,
-    group: Array,
+    group: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     cohort: {
         year: String,
         season: String,
