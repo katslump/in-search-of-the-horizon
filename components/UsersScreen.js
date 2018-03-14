@@ -98,7 +98,7 @@ class UsersScreen extends React.Component {
                       location_name: json.results[0].address_components[2].long_name
                   };
                   this.setState({currentLocation: json.results[0].address_components[2].long_name});
-                  fetch('http://172.16.1.25:3000/location', {
+                  fetch('http://10.2.110.153:3000/location', {
                       method: 'POST',
                       headers: {
                           "Content-Type": "application/json"
@@ -115,7 +115,7 @@ class UsersScreen extends React.Component {
                   });
               },
               error => {
-                alert(error);
+                console.log(error)
               }
             );
         }
@@ -128,7 +128,7 @@ class UsersScreen extends React.Component {
     componentDidMount() {
         let self = this;
         this.getLocation();
-        fetch(`http://172.16.1.25:3000/users?currentUser=${transfer.currentUser}`).then((response) => response.json()).then(function(responseJson) {
+        fetch(`http://10.2.110.153:3000/users?currentUser=${transfer.currentUser}`).then((response) => response.json()).then(function(responseJson) {
             self.setState({dataSource: responseJson.users});
         }).catch(function(error) {
             self.setState({message: error});

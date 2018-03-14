@@ -35,7 +35,7 @@ import {
 // import {styles} from '../App';
 export const transfer = {}
 import { Permissions, Notifications } from 'expo';
-const PUSH_ENDPOINT = 'http://172.16.1.25:3000/push-token';
+const PUSH_ENDPOINT = 'http://10.2.110.153:3000/push-token';
 const companyLogo = require('../assets/logo.png');
 
 let token = '';
@@ -125,7 +125,7 @@ class LoginScreen extends React.Component {
         }
         this.setState({message: ''})
 
-        fetch(`http://172.16.1.25:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
+        fetch(`http://10.2.110.153:3000/login?email=${this.state.email}&&password=${this.state.password}`, {
             method: 'GET',
             headers: {
                 "Content-Type": "application/json"

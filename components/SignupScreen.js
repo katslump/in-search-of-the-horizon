@@ -81,7 +81,7 @@ class SignupScreen extends React.Component {
     title: 'Register'
   };
   register() {
-    fetch('http://172.16.1.25:3000/register', {
+    fetch('http://10.2.110.153:3000/register', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"
