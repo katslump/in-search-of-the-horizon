@@ -13,43 +13,23 @@ import {
     Modal
 } from 'react-native';
 import {Location, Permissions} from 'expo';
-// import {styles} from '../App';
 import axios from 'axios';
 import Geocoder from 'react-native-geocoding';
 import {transfer} from './LoginScreen';
-import { Button, Container, Footer, FooterTab, Icon, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Col, Row, Input } from 'native-base';
+import TimeAgo from 'react-timeago';
+import { Button,Card, CardItem, Container, Footer, FooterTab, Icon, Header, Content, List, ListItem, Left, Body, Right, Thumbnail, Text, Col, Row, Input } from 'native-base';
 
 const styles = StyleSheet.create({
   tweetHead: {
     flexDirection: "row",
-    // justifyContent: "flex-start",
-    // alignItems: "center",
-    padding: 10,
+    paddingTop: 10,
     paddingBottom: 0
-  },
-  timeStamp: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    padding: 10,
-    borderBottomColor: "#CCC",
-    borderBottomWidth: StyleSheet.hairlineWidth
   },
   tweetFooter: {
     flexDirection: "row",
     justifyContent: "space-around",
     borderBottomColor: "#CCC",
     borderBottomWidth: StyleSheet.hairlineWidth
-  },
-  footerIcons: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  tweetReply: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    padding: 10,
-    paddingBottom: 0
   }
 });
 
@@ -122,7 +102,8 @@ class UsersScreen extends React.Component {
     }
 
     static navigationOptions = ({navigation}) => {
-        return {title: 'Your Friends'}
+        return {title: 'Near You',
+                headerRight: (<Button transparent onPress={() => navigation.navigate('Settings')}><Icon name="settings"/></Button>)}
     };
 
     componentDidMount() {
@@ -138,20 +119,37 @@ class UsersScreen extends React.Component {
     modal = () => {
       let rowDatas = this.state.rowData;
     return (
-      <Modal animationIn={'slideInDown'} animationOut={'slideInUp'} visible={this.state.modalVisible} animationType={'slide'} onRequestClose={() => this.closeModal()}>
-        <Button light onPress={() => this.closeModal()}
-              title="Back"/>
-          <Thumbnail source={{
-                  uri: rowDatas.photo
-              }} style={{
-                  width: 100,
-                  height: 100
-              }}/>
-          <Text>{rowDatas.f_name}
-              {rowDatas.l_name}</Text>
-          <Text>{rowDatas.phone}</Text>
-          <Text>{rowDatas.location_name ? "Current Location:" + rowDatas.location_name : "" }</Text>
-          <Text>{JSON.stringify(rowDatas.cohort)}</Text>
+      <Modal visible={this.state.modalVisible}  transparent={true} onRequestClose={() => this.closeModal()}>
+          <Header>
+              <Left>
+            <Button transparent onPress={() => this.closeModal()}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
+        </Header>
+          <Content>
+              <Card style={{paddingTop: 20}}>
+                  <CardItem header>
+                 <Text style={{ fontWeight: "bold", fontSize: 18 }}>{rowDatas.f_name} {rowDatas.l_name}</Text>
+               </CardItem>
+               <CardItem>
+                  <Body>
+                      <Thumbnail source={{
+                              uri: rowDatas.photo
+                          }} style={{
+                              width: 100,
+                              height: 100
+                          }}/>
+                      <Text style={{ fontWeight: "bold", fontSize: 12 }}>{rowDatas.phone}</Text>
+                      <Text style={{ color: "#343434", fontSize: 14 }}>{rowDatas.location_name ? rowDatas.location_name : "" }</Text>
+                      <Text>{JSON.stringify(rowDatas.cohort)}</Text>
+                </Body>
+            </CardItem>
+            <CardItem footer>
+                <Text>More info here</Text>
+            </CardItem>
+            </Card>
+        </Content>
       </Modal>
     )
   }
@@ -165,40 +163,44 @@ class UsersScreen extends React.Component {
                     this.getLocation()
                 }}>
                 <Icon name='refresh' />
-                <Text>Refresh</Text>
-            </Button>
                 <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>Current Location: {this.state.currentLocation ? this.state.currentLocation : "Refresh for location"}</Text>
-                <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>{transfer.currentUser}</Text>
-            <List style={styles.tweetHead} dataArray={this.state.dataSource} renderRow={(rowData) =>
+            </Button>
+            <List dataArray={this.state.dataSource} renderRow={(rowData) =>
                 <ListItem avatar onPress={() => {this.openModal(rowData)}}>
-                    <Left>
-                        <Thumbnail large source={{
-                            uri: rowData.photo
-                        }}/>
-                    </Left>
-                    <View
-                      style={{
+                    <Content style={{ backgroundColor: "white" }}>
+                    <View style={styles.tweetHead}>
+                        <Thumbnail large source={{uri: rowData.photo}}/>
+                    <View style={{
                         flex: 1,
                         justifyContent: "center",
                         paddingLeft: 10,
-                        height: 56
-                      }}
-                    >
+                        paddingTop: 10,
+                        paddingBottom: 0,
+                        height: 55
+                      }}>
                         <Text style={{ fontWeight: "bold", fontSize: 18 }}>{rowData.f_name} {rowData.l_name}</Text>
-                        <Text style={{ color: "#999", fontSize: 14 }}>{rowData.location_name ? rowData.location_name : "" }</Text>
+                        <Text style={{ color: "#343434", fontSize: 14 }}>
+                            {rowData.location_name ? rowData.location_name : "" }
+                        </Text>
+                        <Text style={{ color: "#999", fontSize: 12 }}>
+                            Last updated 5 min ago
+                        </Text>
                     </View>
-                  <View style={styles.tweetFooter}>
-            <View>
-              <Button transparent dark>
-                <Icon name="ios-heart-outline" />
-              </Button>
-            </View>
-            <View>
-              <Button transparent dark>
-                <Icon name="ios-mail-outline" />
-              </Button>
-            </View>
-          </View>
+                </View>
+                 <View style={styles.tweetFooter}>
+                    {/* <View>
+                    </View>
+                    <View>
+                    </View>
+                    <View>
+                    </View>
+                    <View>
+                      <Button transparent dark>
+                        <Icon name="ios-mail-outline" />
+                      </Button>
+                    </View> */}
+                </View>
+            </Content>
               </ListItem>
             }>
           </List>
@@ -206,6 +208,7 @@ class UsersScreen extends React.Component {
             <Footer>
          <FooterTab>
              <Body>
+                 <Text style={{ textAlign: "center", fontSize: 14, color: "#AAA" }}>{transfer.currentUser}</Text>
                  <Text>{this.state.message ? this.state.message.toString() : ''}</Text>
              </Body>
          </FooterTab>

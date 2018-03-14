@@ -16,6 +16,7 @@ import {StackNavigator} from 'react-navigation';
 import LoginScreen from './components/LoginScreen';
 import SignupScreen from './components/SignupScreen';
 import UsersScreen from './components/UsersScreen';
+import SettingsScreen from './components/SettingsScreen';
 
 //Navigator
 export default StackNavigator({
@@ -27,6 +28,9 @@ export default StackNavigator({
     },
     Users: {
         screen: UsersScreen
+    },
+    Settings: {
+        screen: SettingsScreen
     }
 }, {initialRouteName: 'Login'});
 
