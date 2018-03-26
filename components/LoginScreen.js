@@ -118,6 +118,7 @@ class LoginScreen extends React.Component {
     }
 
     login(email, password) {
+        console.log("got here");
         let self = this;
         if (!self.state.email || !self.state.password) {
             this.setState({message: 'Invalid Email or Password'});

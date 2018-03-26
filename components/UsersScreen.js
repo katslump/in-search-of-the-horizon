@@ -65,7 +65,7 @@ class UsersScreen extends React.Component {
         } else {
 
             let location = await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-            Geocoder.setApiKey("AIzaSyAuP9_agcMpX9v27aVlU4LggxmrpzvfITY"); // use a valid API key
+            Geocoder.setApiKey(process.env.GOOGLE_API); // use a valid API key
 
             Geocoder.getFromLatLng(location.coords.latitude, location.coords.longitude)
             .then(
