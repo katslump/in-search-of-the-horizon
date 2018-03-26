@@ -50,7 +50,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-function notificationCheck(currentUser, allUsers) {
+function groupCheck(currentUser, allUsers) {
 
     // Gets group of users within a given radius
     let group = allUsers.filter(user => {
@@ -58,44 +58,60 @@ function notificationCheck(currentUser, allUsers) {
         let objlong = parseFloat(user.long);
         return currentUser.email !== user.email && currentUser.lat > objlat - .4 && currentUser.lat < objlat + .4 && currentUser.long > objlong - .4 && currentUser.long < objlong + .4;
     });
-
-    console.log(currentUser.pushToken);
-
-    // Crafts messages for group of users
-    const messages = group.map(person => ({
-        to: person.pushToken, sound: 'default', body: `Current User ${currentUser.f_name} is near you!`
-        // data: { withSome: 'data' },
-    })).filter(person => person.to);
-
-    let chunks = expo.chunkPushNotifications(messages);
-
-    // Sends notifcations to users using Expo API
-    Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log);
-    User.findOneAndUpdate({
-        email: currentUser.email
-    }, {
-        $set: {
-            group: group
-        }
-    }, function(error, pos) {
-        if (error) {
-            console.log(error);
-        }
-    })
     return group;
+}
+
+function notificationCheck(currUser, group) {
+    User.findById(currUser._id, function(err, info){
+      if(err) {
+        console.log(err)
+      } else {
+        if(info.group.map(person => (person.toString())).toString() !== group.map(person=>person._id.toString()).toString()) {
+          const messages = group.map(person => ({
+              to: person.pushToken, sound: 'default', body: `Current User ${currUser.f_name} is near you!`
+              // data: { withSome: 'data' },
+          })).filter(person => person.to);
+          let chunks = expo.chunkPushNotifications(messages);
+          // Sends notifcations to users using Expo API
+          Promise.all(chunks.map(chunk => expo.sendPushNotificationsAsync(chunk))).then(console.log).catch(console.log);
+
+          User.findOneAndUpdate({
+              email: currUser.email
+          }, {
+              $set: {
+                  group: group.map(user => user.id)
+              }
+          }, function(error, pos) {
+              if (error) {
+                  console.log(error);
+              }
+          })
+        } else {
+          console.log('this means the group was the same so no notification was sent')
+        }
+        // Crafts messages for group of users
+      }
+    })
 }
 
 app.get('/users', (req, res) => {
     let user = req.query.currentUser
-    User.find().catch(error => {
-        res.json({error: error});
-    }).then(response => {
-        User.findOne({email: user}).then((result) => {
-            let group = notificationCheck(result, response)
+    User.find().then(response => {
+        User.findOne({email: user}).then((currUser) => {
+            let group = groupCheck(currUser, response)
+            notificationCheck(currUser, group)
             res.json({users: group})
         }) //.catch(error => res.json({ error: error}))
     })
 });
+// .catch(error => {
+//     res.json({error: error});
+// })
+//
+// User.update({_id:'5a9999e3f379104f91ec5002'}, { $set: {group:[]}}, function(error, result) {
+//   console.log(error)
+//   console.log(result)
+// })
 
 // Updates backend with latest user notification settings
 app.post('/push-token', (req, res) => {
