@@ -24,10 +24,10 @@ Horizons has been spitting out successful Horizonites for several years now. Som
 - A user can see the approximate area of Horizonites on a map
 
 ## Display
-  Login page: ![LoginScreen](docs/images/login.PNG)
-  User page: ![LoginScreen](docs/images/user.PNG)
-  Setting page: ![LoginScreen](docs/images/setting.PNG)
-  Registration page: ![LoginScreen](docs/images/register1.PNG)
+  Login page: ![LoginScreen](docs/images/login.PNG =250x)
+  User page: ![User Screen](docs/images/user.PNG =250x)
+  Setting page: ![Setting Screen](docs/images/setting.PNG =250x)
+  Registration page: ![Registration Screen](docs/images/register1.PNG =250x)
   <!-- Login page: ![LoginScreen](docs/images/login.png) -->
 
 ## Components
