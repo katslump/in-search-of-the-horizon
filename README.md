@@ -25,6 +25,7 @@ Horizons has been spitting out successful Horizonites for several years now. Som
 
 ## Display
   Login page: ![LoginScreen](docs/images/login.PNG | width=250)
+  
   User page: ![User Screen](docs/images/user.PNG =250x)
   Setting page: ![Setting Screen](docs/images/setting.PNG =250x)
   Registration page: ![Registration Screen](docs/images/register1.PNG =250x)
